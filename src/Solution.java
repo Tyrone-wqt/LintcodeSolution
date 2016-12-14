@@ -989,6 +989,53 @@ public class Solution {
         return (n&shift1)^shiftm;
     }
 
+    /**
+     * @paramn n: An integer
+     * @return: An integer
+     */
+    public int numTrees(int n) {
+        // write your code here
+        if(n==0||n==1) return 1;
+        if(n==2) return 2;
+
+        int[] cache=new int[n+1];
+
+        cache[1]=1;
+        cache[2]=2;
+
+        for(int j=3;j<n+1;j++){
+            int tmp=0;
+            for(int k=2;k<j;k++){
+                tmp=tmp+cache[k-1]*cache[j-k];
+            }
+            cache[j]=2*cache[j-1]+tmp;
+        }
+        return cache[n];
+    }
+
+    /*
+     * @param a, b, n: 32bit integers
+     * @return: An integer
+     * equl:(a * b) % p = (a % p * b % p) % p
+     */
+    public int fastPower(int a, int b, int n) {
+        // write your code here
+        if (n == 0)
+            return 1 % b;
+        else if (n == 1)
+            return a % b;
+        else if (n < 0)
+            return -1;
+
+        long product = fastPower(a, b, n/2);
+        product = (product*product) % b;
+        if (n % 2 == 1)
+            product = (product * (a%b))%b; //equal: product = (product * a)%b;
+        return (int)(product);
+    }
+
+
+
 
 }
 
