@@ -1034,8 +1034,231 @@ public class Solution {
         return (int)(product);
     }
 
+    /**
+     *@param n: Given a decimal number that is passed in as a string
+     *@return: A string
+     */
+    public String binaryRepresentation(String n) {
+        // write your code here
+        StringBuilder sb=new StringBuilder();
+        int pIndex=n.indexOf(".");
+        String pre=n.substring(0,pIndex);
+        String after=n.substring(pIndex,n.length());
+        long zheng=Integer.valueOf(pre);
+        double xiao=Double.valueOf(after);
+        if(zheng==0)
+            sb.append(0);
+        while(zheng>0){
+            sb.append(zheng%2);
+            zheng=zheng/2;
+        }
+        sb.reverse();
+        if(Math.abs(xiao)>=1e-5){
+            sb.append(".");
+        }else{
+            return sb.toString();
+        }
+        int i=0;
+        while(Math.abs(xiao)>=1e-5){
+            xiao=xiao*2;
+            int tmp=(int)(xiao);
+            if(i<32){
+                sb.append(tmp);
+                xiao=xiao-tmp;
+                i++;
+            }else{
+                return "ERROR";
+            }
+        }
+        return  sb.toString();
+    }
+
+    /**
+     *@param A : an integer array
+     *return : a integer
+     */
+    public int singleNumber(int[] A) {
+        // Write your code here
+        int ret=0;
+        for(int i=0;i<A.length;i++){
+            ret=ret^A[i];
+        }
+        return ret;
+    }
+
+    /**
+     * @param nums: a list of integers
+     * @return: find a  majority number
+     */
+    public int majorityNumber(ArrayList<Integer> nums) {
+        // write your code
+        int temp=nums.get(0);
+        int n=1;
+        for(int i=1;i<nums.size();i++){
+            if(nums.get(i)==temp){
+                n++;
+            }else{
+                n--;
+                if(n==0){
+                    temp=nums.get(i);
+                    n++;
+                }
+            }
+        }
+        return temp;
+    }
+
+    /**
+     *@param num: A list of non negative integers
+     *@return: A string
+     */
+    public String largestNumber(int[] num) {
+        // write your code here
+        if(num==null) return null;
+       sortQuick(num,0,num.length-1);
+        StringBuilder sb=new StringBuilder();
+        boolean isStart=false;
+        for(int k=num.length-1;k>-1;k--){
+            if(num[k]==0&&!isStart&&k!=0){
+                continue;
+            }else{
+                isStart=true;
+                sb.append(num[k]);
+            }
+
+        }
+
+        return sb.toString();
+
+    }
 
 
+    public void sortQuick(int[] num,int start,int end){
+        if(start>=end) return;
+        int key=num[start];
+        int i=start;
+        int j=end;
+        while(i<j){
+            while(compareTo(num[i],key)>=0&&i<j) i++;
+            while (compareTo(num[j],key)<0&&i<=j) j--;
+            if(i<j){
+                swap(num,i,j);
+            }
+        }
+        if(j!=start){
+            swap(num,j,start);
+        }
+        sortQuick(num,start,j-1);
+        sortQuick(num,j+1,end);
+    }
+    /*
+     * a<b return 1;
+     * a==b return 0;
+     * a>b return -1;
+     */
+    public int compareTo(int a,int b){
+        String stra=String.valueOf(a)+String.valueOf(b);
+        String strb=String.valueOf(b)+String .valueOf(a);
+        for(int i=0;i<stra.length()&&i<strb.length();i++){
+            char ca=stra.charAt(i);
+            char cb=strb.charAt(i);
+            if(ca<cb) return 1;
+            else if(ca>cb) return -1;
+            else continue;
+        }
+       return 0;
+    }
+
+    /**
+     * @param A: A list of integers
+     * @return: The boolean answer
+     */
+    public boolean canJump(int[] A) {
+        // wirte your code here
+        int maxN = 0; //记录能走的最大步数
+        int i = 0;    //记录当前走到第几个元素
+        while(i<=maxN)  //能走的最大步数都不能到达当前元素 循环终止
+        {
+            maxN = Math.max(maxN, i + A[i]);   //随时更新能走的最大步数
+            ++i;                      //每次往前走一步
+            if(maxN>=A.length-1)
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param gas: an array of integers
+     * @param cost: an array of integers
+     * @return: an integer
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        // write your code here
+        // write your code here
+        int cur = 0;
+        int totalGas = 0;
+        int totalCost = 0;
+        int start = 0;
+        for(int i=0;i<gas.length;i++)
+        {
+            cur+=gas[i];
+            cur-=cost[i];
+            totalGas+=gas[i];
+            totalCost+=cost[i];
+            if(cur<0)
+            {
+                start = i+1;
+                cur = 0;
+            }
+        }
+        if(totalGas>=totalCost)
+            return start;
+        return -1;
+    }
+
+    /**
+     *@param A: A positive integer which has N digits, A is a string.
+     *@param k: Remove k digits.
+     *@return: A string
+     */
+    public String DeleteDigits(String A, int k) {
+        // write your code here
+        String ret="";
+        if(A==null)
+            return ret;
+        ret=A;
+        while(k>0){
+            int i=0;
+            while(i<ret.length()-1&&ret.charAt(i)<=ret.charAt(i+1))
+                ++i;
+
+            ret=ret.substring(0, i)+ret.substring(i + 1);
+            k--;
+        }
+        int i;
+        for(i=0;ret.charAt(i)=='0';++i);
+        ret=ret.substring(i);
+        return ret;
+    }
+
+    /**
+     * @param nums: an array of integers
+     * @return: return nothing (void), do not return anything, modify nums in-place instead
+     */
+    public int[] nextPermutation(int[] nums) {
+        // write your code here
+        for(int i=nums.length-1;i>=0;i--){
+            for(int j=nums.length-1;j>i;j--){
+                if(nums[i]<nums[j]){
+                    swap(nums,i,j);
+                    Arrays.sort(nums,i+1,nums.length-1);
+                    return nums;
+                }
+            }
+        }
+        Arrays.sort(nums);
+        return nums;
+    }
 
 }
 
