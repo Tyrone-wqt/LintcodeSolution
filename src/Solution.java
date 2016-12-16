@@ -1259,6 +1259,198 @@ public class Solution {
         Arrays.sort(nums);
         return nums;
     }
+    /**
+     * @param head: The first node of linked list.
+     * @param n: An integer.
+     * @return: The head of linked list.
+     */
+    ListNode removeNthFromEnd(ListNode head, int n) {
+        // write your code here
+        if(head==null) return null;
+        int length=0;
+        ListNode node=head;
+        while(node!=null){
+            length++;
+            node=node.next;
+        }
+
+        int deleteIndex=length-n;
+        node=head;
+        int i=0;
+        while(node!=null){
+            if(deleteIndex==0){
+                return head.next;
+            }else{
+                if(i==deleteIndex-1){
+                    ListNode deleteNode=node.next;
+                    node.next=deleteNode.next;
+                    return head;
+                }
+            }
+            i++;
+            node=node.next;
+        }
+        return head;
+    }
+
+    /**
+     * @param head: The first node of linked list.
+     * @param x: an integer
+     * @return: a ListNode
+     */
+    public ListNode partition(ListNode head, int x) {
+        // write your code here
+        if(head==null)return null;
+        ListNode ret=head;
+        boolean isHeadTarget=false;
+        ListNode targetPre=null;
+        ListNode node=head;
+        if(head.val>=x) isHeadTarget=true;
+        else{
+            while(node.next!=null){
+                if(node.next.val>=x) {
+                    targetPre=node;
+                    break;
+                }
+                node=node.next;
+            }
+        }
+        if(isHeadTarget){
+            ListNode start=head;
+            ListNode record=null;
+            while(start.next!=null){
+                if(start.next.val<x){
+                    ListNode tmp=start.next;
+                    start.next=tmp.next;
+                    tmp.next=head;
+                    if(record!=null) {
+                        record.next=tmp;
+                    }else{
+                        ret=tmp;
+                    }
+                    record=tmp;
+                    continue;
+                }
+                start=start.next;
+            }
+        }else{
+            if(targetPre==null){
+                return head;
+            }else{
+                ListNode start=targetPre.next;
+                ListNode record=targetPre;
+                while(start.next!=null){
+                    if(start.next.val<x){
+                        ListNode tmp=start.next;
+                        start.next=tmp.next;
+                        tmp.next=record.next;
+                        record.next=tmp;
+                        record=tmp;
+                        continue;
+                    }
+                    start=start.next;
+                }
+            }
+
+        }
+        return isHeadTarget?ret:head;
+    }
+
+    /**
+     * @param head head is the head of the linked list
+     * @return: ListNode head of linked list
+     */
+    public static ListNode deleteDuplicates(ListNode head) {
+        // write your code here
+        ListNode node=head;
+        while(node!=null){
+            ListNode tmp=node.next;
+            if(tmp!=null){
+                if(tmp.val==node.val){
+                    node.next=tmp.next;
+                    continue;
+                }
+                node=node.next;
+            }else{
+                break;
+            }
+        }
+        return head;
+    }
+
+    /**
+     * @param head: The head of linked list.
+     * @return: The new head of reversed linked list.
+     */
+    public ListNode reverse(ListNode head) {
+        // write your code here
+        if(head==null) return null;
+        Map<ListNode,ListNode> map=new HashMap<>();
+        ListNode node=head;
+        while(node!=null){
+            map.put(node,node.next);
+            node=node.next;
+        }
+        ListNode ret=null;
+        for(Map.Entry<ListNode,ListNode> entry:map.entrySet()){
+            if(entry.getValue()==null){
+                ret=entry.getKey();
+                continue;
+            }
+            if(entry.getKey()==head){
+                entry.getValue().next=entry.getKey();
+                entry.getKey().next=null;
+                continue;
+            }
+            entry.getValue().next=entry.getKey();
+        }
+        return ret;
+    }
+
+    /**
+     * @param l1 l1 is the head of the linked list
+     * @param l2 l2 is the head of the linked list
+     * @return: ListNode head of linked list
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // write your code here
+        if(l1==null) return l2;
+        if(l2==null) return l1;
+        ListNode ret=null;
+        ListNode index=null;
+        ListNode node1=l1;
+        ListNode node2=l2;
+        while(node1!=null&&node2!=null){
+            if(node1.val<=node2.val){
+                if(ret==null) ret=node1;
+                if(index==null) index=node1;
+                else{
+                    index.next=node1;
+                    index=node1;
+                }
+                node1=node1.next;
+            }else{
+                if(ret==null) ret=node2;
+                if(index==null) index=node2;
+                else{
+                    index.next=node2;
+                    index=node2;
+                }
+                node2=node2.next;
+            }
+        }
+        while(node1!=null){
+            index.next=node1;
+            index=node1;
+            node1=node1.next;
+        }
+        while(node2!=null){
+            index.next=node2;
+            index=node2;
+            node2=node2.next;
+        }
+        return ret;
+    }
 
 }
 
