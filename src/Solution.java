@@ -1,9 +1,4 @@
-import java.nio.channels.Channel;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
 import java.util.*;
-import java.util.regex.Matcher;
 
 /**
  * Created by lenovo on 2016/11/24.
@@ -1452,6 +1447,261 @@ public class Solution {
         return ret;
     }
 
+    /**
+     * @param head: The head of linked list.
+     * @return: You should return the head of the sorted linked list,
+     * using constant space complexity.
+     */
+    public ListNode sortList(ListNode head) {
+        // write your code here
+        if (head == null || head.next == null) return head;
+        ListNode low = head;
+        ListNode fast = head;
+        ListNode pre = head;
+        while (low != null && fast != null && fast.next != null) {
+            pre = low;
+            low = low.next;
+            fast = fast.next.next;
+        }
+        pre.next = null;
+        return merge2List(sortList(head), sortList(low));
+    }
+
+    public ListNode merge2List(ListNode list1, ListNode list2) {
+        if (list1 == null) return list2;
+        if (list2 == null) return list1;
+        ListNode head = null;
+        ListNode ret = null;
+        while (list1 != null && list2 != null) {
+            if (list1.val <= list2.val) {
+                if (ret == null) {
+                    ret = list1;
+                    head = ret;
+                } else {
+                    ret.next = list1;
+                    ret = ret.next;
+                }
+                list1 = list1.next;
+            } else {
+                if (ret == null) {
+                    ret = list2;
+                    head = ret;
+                } else {
+                    ret.next = list2;
+                    ret = ret.next;
+                }
+                list2 = list2.next;
+            }
+        }
+        while (list1 != null) {
+            ret.next = list1;
+            ret = ret.next;
+            list1 = list1.next;
+        }
+        while (list2 != null) {
+            ret.next = list2;
+            ret = ret.next;
+            list2 = list2.next;
+        }
+        return head;
+
+    }
+
+    /**
+     * @param head: The first node of linked list.
+     * @return: True if it has a cycle, or false
+     */
+    public boolean hasCycle(ListNode head) {
+        // write your code here
+        if (head == null) return false;
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (slow != null && fast != null && fast.next != null && slow != fast) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if (slow == fast) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param head: The head of linked list with a random pointer.
+     * @return: A new head of a deep copy of the list.
+     */
+    public RandomListNode copyRandomList(RandomListNode head) {
+        // write your code here
+        RandomListNode node = head;
+        while (node != null) {
+            RandomListNode clonedNode = new RandomListNode(node.label);
+            clonedNode.next = node.next;
+            node.next = clonedNode;
+            node = clonedNode.next;
+        }
+
+        node = head;
+        while (node != null) {
+            RandomListNode clonedNode = node.next;
+            if (node.random != null) {
+                clonedNode.random = node.random.next;
+            }
+            node = clonedNode.next;
+        }
+
+        node = head;
+        RandomListNode clonedHead = head.next;
+        RandomListNode clonedNode = null;
+
+        while (node.next.next != null) {
+
+            clonedNode = node.next;
+            node.next = clonedNode.next;
+            node = clonedNode.next;
+            clonedNode.next = node.next;
+            clonedNode = node.next;
+        }
+
+        node.next = null;
+        return clonedHead;
+    }
+
+    /**
+     * @param head: The head of linked list.
+     * @return: void
+     */
+    public void reorderList(ListNode head) {
+        // write your code here
+        if (head == null) return;
+        int size = 0;
+        ListNode node = head;
+        while (node != null) {
+            size++;
+            node = node.next;
+        }
+        int halfSize = size / 2;
+        node = head;
+        size = 0;
+        while (node != null) {
+            if (size < halfSize) {
+                size++;
+                node = node.next;
+            } else {
+                break;
+            }
+        }
+        ListNode node2 = node.next;
+        node.next = null;
+        //reverse node2
+        node = node2;
+        ListNode nodePre = null;
+        ListNode nodeNext = null;
+        while (node != null) {
+            nodeNext = node.next;
+            node.next = nodePre;
+            nodePre = node;
+            node = nodeNext;
+        }
+        node2 = nodePre;
+        node = head;
+        ListNode index = null;
+        while (node != null && node2 != null) {
+            ListNode tmp1 = node.next;
+            ListNode tmp2 = node2.next;
+            if (index == null) {
+                index = node;
+                index.next = node2;
+            } else {
+                index.next = node;
+                index.next.next = node2;
+            }
+            index = node2;
+            node = tmp1;
+            node2 = tmp2;
+        }
+        while (node != null) {
+            if (index == null) {
+                index = node;
+                node = node.next;
+            } else {
+                index.next = node;
+                index = node;
+                node = node.next;
+            }
+
+        }
+        while (node2 != null) {
+            if (index == null) {
+                index = node2;
+                node2 = node2.next;
+            } else {
+                index.next = node2;
+                index = node2;
+                node2 = node2.next;
+            }
+        }
+    }
+
+    /**
+     * @param head: the List
+     * @param k:    rotate to the right k places
+     * @return: the list after rotation
+     */
+    public ListNode rotateRight(ListNode head, int k) {
+        // write your code here
+        if (head == null) return null;
+        int size = 0;
+        ListNode node = head;
+        while (node != null) {
+            size++;
+            node = node.next;
+        }
+        int offset = size - k % size;
+        int index = 0;
+        node = head;
+        while (index < offset) {
+            index++;
+            node = node.next;
+        }
+
+        if (node == null) return head;
+        else {
+            ListNode end = node;
+            while (node.next != null) {
+                node = node.next;
+            }
+            node.next = head;
+            while (node.next != end) {
+                node = node.next;
+            }
+            node.next = null;
+            return end;
+        }
+    }
+
+    /**
+     * @param head: The first node of linked list.
+     * @return: a tree node
+     */
+    public TreeNode sortedListToBST(ListNode head) {
+        // write your code here
+        if (head == null) return null;
+        if (head.next == null) return new TreeNode(head.val);
+        ListNode pre = head;
+        ListNode slow = head;
+        ListNode fast = head;
+        while (slow != null && fast != null && fast.next != null) {
+            pre = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        pre.next = null;
+        TreeNode root = new TreeNode(slow.val);
+        root.left = sortedListToBST(head);
+        root.right = sortedListToBST(slow.next);
+        return root;
+    }
 }
 
 

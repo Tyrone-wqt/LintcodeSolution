@@ -1,11 +1,7 @@
-import junit.extensions.TestSetup;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class SolutionTest {
     private Solution solution;
@@ -220,5 +216,15 @@ public class SolutionTest {
         node1.next=node3;
         node3.next=node8;
         solution.mergeTwoLists(node1,node2);
+    }
+
+    @Test
+    public void testReorderList() throws Exception {
+        ListNode nodef1 = new ListNode(-1);
+        ListNode node2 = new ListNode(2);
+        ListNode node0 = new ListNode(0);
+        node2.next = nodef1;
+        nodef1.next = node0;
+        solution.reorderList(node2);
     }
 }
