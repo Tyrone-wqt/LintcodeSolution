@@ -227,4 +227,15 @@ public class SolutionTest {
         nodef1.next = node0;
         solution.reorderList(node2);
     }
+
+    @Test
+    public void testSerialize() throws Exception {
+        TreeNode node1 = new TreeNode(1);
+        TreeNode node2 = new TreeNode(2);
+        node1.right = node2;
+        String ret = solution.serialize(node1);
+        System.out.println(ret);
+        solution.deserialize(ret);
+
+    }
 }

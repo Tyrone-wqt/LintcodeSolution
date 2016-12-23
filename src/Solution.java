@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by lenovo on 2016/11/24.
@@ -878,16 +879,16 @@ public class Solution {
             if (A[mid] == target) return mid;
 
             if (A[mid] > A[start]) {
-                if(A[start]<=target&&A[mid]>=target){
-                    end=mid;
-                }else{
-                    start=mid;
+                if (A[start] <= target && A[mid] >= target) {
+                    end = mid;
+                } else {
+                    start = mid;
                 }
             } else {
-                if(A[mid]<=target&&A[end]>=target){
-                    start=mid;
-                }else{
-                    end=mid;
+                if (A[mid] <= target && A[end] >= target) {
+                    start = mid;
+                } else {
+                    end = mid;
                 }
             }
 
@@ -898,19 +899,19 @@ public class Solution {
     }
 
     /**
-     *@param a, b: Two integer
-     *return: An integer
+     * @param a, b: Two integer
+     *           return: An integer
      */
     public static int bitSwapRequired(int a, int b) {
         // write your code here
-        int tmp=a^b;
-        int yu=0;
-        int ret=0;
+        int tmp = a ^ b;
+        int yu = 0;
+        int ret = 0;
 
-        int flag=1;
-        while(flag!=0){
-            if((tmp^flag)!=0) ret++;
-            flag=flag<<1;
+        int flag = 1;
+        while (flag != 0) {
+            if ((tmp ^ flag) != 0) ret++;
+            flag = flag << 1;
         }
         return ret;
     }
@@ -921,8 +922,8 @@ public class Solution {
     */
     public boolean checkPowerOf2(int n) {
         // write your code here
-        if(n<0) return false;
-        return (n&(n-1))==0?true:false;
+        if (n < 0) return false;
+        return (n & (n - 1)) == 0 ? true : false;
 
     }
 
@@ -933,10 +934,10 @@ public class Solution {
     public long trailingZeros(long n) {
         // write your code here
         long count = 0;
-        long temp=n/5;
-        while (temp!=0) {
-            count+=temp;
-            temp=temp/5;
+        long temp = n / 5;
+        while (temp != 0) {
+            count += temp;
+            temp = temp / 5;
         }
         return count;
     }
@@ -947,41 +948,41 @@ public class Solution {
      */
     public int uniquePaths(int m, int n) {
         // write your code here
-        if(m<=0||n<=0) return 0;
-        int s[][]=new int[m][n];
-        for(int i=0;i<m;i++){
-            s[i][0]=1;
+        if (m <= 0 || n <= 0) return 0;
+        int s[][] = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            s[i][0] = 1;
         }
-        for(int j=0;j<n;j++){
-            s[0][j]=1;
+        for (int j = 0; j < n; j++) {
+            s[0][j] = 1;
         }
-        for(int p=1;p<m;p++){
-            for(int q=1;q<n;q++){
-                s[p][q]=s[p-1][q]+s[p][q-1];
+        for (int p = 1; p < m; p++) {
+            for (int q = 1; q < n; q++) {
+                s[p][q] = s[p - 1][q] + s[p][q - 1];
             }
         }
 
-        return s[m-1][n-1];
+        return s[m - 1][n - 1];
     }
 
     /**
-     *@param n, m: Two integer
-     *@param i, j: Two bit positions
-     *return: An integer
+     * @param n, m: Two integer
+     * @param i, j: Two bit positions
+     *           return: An integer
      */
     public int updateBits(int n, int m, int i, int j) {
         // write your code here
-        int shiftm=m<<i;
-        int shift1=0;
-        if(j<31){
-            shift1=(-1)<<(j+1);
+        int shiftm = m << i;
+        int shift1 = 0;
+        if (j < 31) {
+            shift1 = (-1) << (j + 1);
         }
-        int sum=0;
-        for(int q=0;q<i;q++){
-            sum= (int) (sum+Math.pow(2,q));
+        int sum = 0;
+        for (int q = 0; q < i; q++) {
+            sum = (int) (sum + Math.pow(2, q));
         }
-        shift1=shift1+sum;
-        return (n&shift1)^shiftm;
+        shift1 = shift1 + sum;
+        return (n & shift1) ^ shiftm;
     }
 
     /**
@@ -990,20 +991,20 @@ public class Solution {
      */
     public int numTrees(int n) {
         // write your code here
-        if(n==0||n==1) return 1;
-        if(n==2) return 2;
+        if (n == 0 || n == 1) return 1;
+        if (n == 2) return 2;
 
-        int[] cache=new int[n+1];
+        int[] cache = new int[n + 1];
 
-        cache[1]=1;
-        cache[2]=2;
+        cache[1] = 1;
+        cache[2] = 2;
 
-        for(int j=3;j<n+1;j++){
-            int tmp=0;
-            for(int k=2;k<j;k++){
-                tmp=tmp+cache[k-1]*cache[j-k];
+        for (int j = 3; j < n + 1; j++) {
+            int tmp = 0;
+            for (int k = 2; k < j; k++) {
+                tmp = tmp + cache[k - 1] * cache[j - k];
             }
-            cache[j]=2*cache[j-1]+tmp;
+            cache[j] = 2 * cache[j - 1] + tmp;
         }
         return cache[n];
     }
@@ -1022,61 +1023,61 @@ public class Solution {
         else if (n < 0)
             return -1;
 
-        long product = fastPower(a, b, n/2);
-        product = (product*product) % b;
+        long product = fastPower(a, b, n / 2);
+        product = (product * product) % b;
         if (n % 2 == 1)
-            product = (product * (a%b))%b; //equal: product = (product * a)%b;
-        return (int)(product);
+            product = (product * (a % b)) % b; //equal: product = (product * a)%b;
+        return (int) (product);
     }
 
     /**
-     *@param n: Given a decimal number that is passed in as a string
-     *@return: A string
+     * @param n: Given a decimal number that is passed in as a string
+     * @return: A string
      */
     public String binaryRepresentation(String n) {
         // write your code here
-        StringBuilder sb=new StringBuilder();
-        int pIndex=n.indexOf(".");
-        String pre=n.substring(0,pIndex);
-        String after=n.substring(pIndex,n.length());
-        long zheng=Integer.valueOf(pre);
-        double xiao=Double.valueOf(after);
-        if(zheng==0)
+        StringBuilder sb = new StringBuilder();
+        int pIndex = n.indexOf(".");
+        String pre = n.substring(0, pIndex);
+        String after = n.substring(pIndex, n.length());
+        long zheng = Integer.valueOf(pre);
+        double xiao = Double.valueOf(after);
+        if (zheng == 0)
             sb.append(0);
-        while(zheng>0){
-            sb.append(zheng%2);
-            zheng=zheng/2;
+        while (zheng > 0) {
+            sb.append(zheng % 2);
+            zheng = zheng / 2;
         }
         sb.reverse();
-        if(Math.abs(xiao)>=1e-5){
+        if (Math.abs(xiao) >= 1e-5) {
             sb.append(".");
-        }else{
+        } else {
             return sb.toString();
         }
-        int i=0;
-        while(Math.abs(xiao)>=1e-5){
-            xiao=xiao*2;
-            int tmp=(int)(xiao);
-            if(i<32){
+        int i = 0;
+        while (Math.abs(xiao) >= 1e-5) {
+            xiao = xiao * 2;
+            int tmp = (int) (xiao);
+            if (i < 32) {
                 sb.append(tmp);
-                xiao=xiao-tmp;
+                xiao = xiao - tmp;
                 i++;
-            }else{
+            } else {
                 return "ERROR";
             }
         }
-        return  sb.toString();
+        return sb.toString();
     }
 
     /**
-     *@param A : an integer array
-     *return : a integer
+     * @param A : an integer array
+     *          return : a integer
      */
     public int singleNumber(int[] A) {
         // Write your code here
-        int ret=0;
-        for(int i=0;i<A.length;i++){
-            ret=ret^A[i];
+        int ret = 0;
+        for (int i = 0; i < A.length; i++) {
+            ret = ret ^ A[i];
         }
         return ret;
     }
@@ -1087,15 +1088,15 @@ public class Solution {
      */
     public int majorityNumber(ArrayList<Integer> nums) {
         // write your code
-        int temp=nums.get(0);
-        int n=1;
-        for(int i=1;i<nums.size();i++){
-            if(nums.get(i)==temp){
+        int temp = nums.get(0);
+        int n = 1;
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums.get(i) == temp) {
                 n++;
-            }else{
+            } else {
                 n--;
-                if(n==0){
-                    temp=nums.get(i);
+                if (n == 0) {
+                    temp = nums.get(i);
                     n++;
                 }
             }
@@ -1104,20 +1105,20 @@ public class Solution {
     }
 
     /**
-     *@param num: A list of non negative integers
-     *@return: A string
+     * @param num: A list of non negative integers
+     * @return: A string
      */
     public String largestNumber(int[] num) {
         // write your code here
-        if(num==null) return null;
-       sortQuick(num,0,num.length-1);
-        StringBuilder sb=new StringBuilder();
-        boolean isStart=false;
-        for(int k=num.length-1;k>-1;k--){
-            if(num[k]==0&&!isStart&&k!=0){
+        if (num == null) return null;
+        sortQuick(num, 0, num.length - 1);
+        StringBuilder sb = new StringBuilder();
+        boolean isStart = false;
+        for (int k = num.length - 1; k > -1; k--) {
+            if (num[k] == 0 && !isStart && k != 0) {
                 continue;
-            }else{
-                isStart=true;
+            } else {
+                isStart = true;
                 sb.append(num[k]);
             }
 
@@ -1128,40 +1129,41 @@ public class Solution {
     }
 
 
-    public void sortQuick(int[] num,int start,int end){
-        if(start>=end) return;
-        int key=num[start];
-        int i=start;
-        int j=end;
-        while(i<j){
-            while(compareTo(num[i],key)>=0&&i<j) i++;
-            while (compareTo(num[j],key)<0&&i<=j) j--;
-            if(i<j){
-                swap(num,i,j);
+    public void sortQuick(int[] num, int start, int end) {
+        if (start >= end) return;
+        int key = num[start];
+        int i = start;
+        int j = end;
+        while (i < j) {
+            while (compareTo(num[i], key) >= 0 && i < j) i++;
+            while (compareTo(num[j], key) < 0 && i <= j) j--;
+            if (i < j) {
+                swap(num, i, j);
             }
         }
-        if(j!=start){
-            swap(num,j,start);
+        if (j != start) {
+            swap(num, j, start);
         }
-        sortQuick(num,start,j-1);
-        sortQuick(num,j+1,end);
+        sortQuick(num, start, j - 1);
+        sortQuick(num, j + 1, end);
     }
+
     /*
      * a<b return 1;
      * a==b return 0;
      * a>b return -1;
      */
-    public int compareTo(int a,int b){
-        String stra=String.valueOf(a)+String.valueOf(b);
-        String strb=String.valueOf(b)+String .valueOf(a);
-        for(int i=0;i<stra.length()&&i<strb.length();i++){
-            char ca=stra.charAt(i);
-            char cb=strb.charAt(i);
-            if(ca<cb) return 1;
-            else if(ca>cb) return -1;
+    public int compareTo(int a, int b) {
+        String stra = String.valueOf(a) + String.valueOf(b);
+        String strb = String.valueOf(b) + String.valueOf(a);
+        for (int i = 0; i < stra.length() && i < strb.length(); i++) {
+            char ca = stra.charAt(i);
+            char cb = strb.charAt(i);
+            if (ca < cb) return 1;
+            else if (ca > cb) return -1;
             else continue;
         }
-       return 0;
+        return 0;
     }
 
     /**
@@ -1172,18 +1174,18 @@ public class Solution {
         // wirte your code here
         int maxN = 0; //记录能走的最大步数
         int i = 0;    //记录当前走到第几个元素
-        while(i<=maxN)  //能走的最大步数都不能到达当前元素 循环终止
+        while (i <= maxN)  //能走的最大步数都不能到达当前元素 循环终止
         {
             maxN = Math.max(maxN, i + A[i]);   //随时更新能走的最大步数
             ++i;                      //每次往前走一步
-            if(maxN>=A.length-1)
+            if (maxN >= A.length - 1)
                 return true;
         }
         return false;
     }
 
     /**
-     * @param gas: an array of integers
+     * @param gas:  an array of integers
      * @param cost: an array of integers
      * @return: an integer
      */
@@ -1194,45 +1196,43 @@ public class Solution {
         int totalGas = 0;
         int totalCost = 0;
         int start = 0;
-        for(int i=0;i<gas.length;i++)
-        {
-            cur+=gas[i];
-            cur-=cost[i];
-            totalGas+=gas[i];
-            totalCost+=cost[i];
-            if(cur<0)
-            {
-                start = i+1;
+        for (int i = 0; i < gas.length; i++) {
+            cur += gas[i];
+            cur -= cost[i];
+            totalGas += gas[i];
+            totalCost += cost[i];
+            if (cur < 0) {
+                start = i + 1;
                 cur = 0;
             }
         }
-        if(totalGas>=totalCost)
+        if (totalGas >= totalCost)
             return start;
         return -1;
     }
 
     /**
-     *@param A: A positive integer which has N digits, A is a string.
-     *@param k: Remove k digits.
-     *@return: A string
+     * @param A: A positive integer which has N digits, A is a string.
+     * @param k: Remove k digits.
+     * @return: A string
      */
     public String DeleteDigits(String A, int k) {
         // write your code here
-        String ret="";
-        if(A==null)
+        String ret = "";
+        if (A == null)
             return ret;
-        ret=A;
-        while(k>0){
-            int i=0;
-            while(i<ret.length()-1&&ret.charAt(i)<=ret.charAt(i+1))
+        ret = A;
+        while (k > 0) {
+            int i = 0;
+            while (i < ret.length() - 1 && ret.charAt(i) <= ret.charAt(i + 1))
                 ++i;
 
-            ret=ret.substring(0, i)+ret.substring(i + 1);
+            ret = ret.substring(0, i) + ret.substring(i + 1);
             k--;
         }
         int i;
-        for(i=0;ret.charAt(i)=='0';++i);
-        ret=ret.substring(i);
+        for (i = 0; ret.charAt(i) == '0'; ++i) ;
+        ret = ret.substring(i);
         return ret;
     }
 
@@ -1242,11 +1242,11 @@ public class Solution {
      */
     public int[] nextPermutation(int[] nums) {
         // write your code here
-        for(int i=nums.length-1;i>=0;i--){
-            for(int j=nums.length-1;j>i;j--){
-                if(nums[i]<nums[j]){
-                    swap(nums,i,j);
-                    Arrays.sort(nums,i+1,nums.length-1);
+        for (int i = nums.length - 1; i >= 0; i--) {
+            for (int j = nums.length - 1; j > i; j--) {
+                if (nums[i] < nums[j]) {
+                    swap(nums, i, j);
+                    Arrays.sort(nums, i + 1, nums.length - 1);
                     return nums;
                 }
             }
@@ -1254,101 +1254,102 @@ public class Solution {
         Arrays.sort(nums);
         return nums;
     }
+
     /**
      * @param head: The first node of linked list.
-     * @param n: An integer.
+     * @param n:    An integer.
      * @return: The head of linked list.
      */
     ListNode removeNthFromEnd(ListNode head, int n) {
         // write your code here
-        if(head==null) return null;
-        int length=0;
-        ListNode node=head;
-        while(node!=null){
+        if (head == null) return null;
+        int length = 0;
+        ListNode node = head;
+        while (node != null) {
             length++;
-            node=node.next;
+            node = node.next;
         }
 
-        int deleteIndex=length-n;
-        node=head;
-        int i=0;
-        while(node!=null){
-            if(deleteIndex==0){
+        int deleteIndex = length - n;
+        node = head;
+        int i = 0;
+        while (node != null) {
+            if (deleteIndex == 0) {
                 return head.next;
-            }else{
-                if(i==deleteIndex-1){
-                    ListNode deleteNode=node.next;
-                    node.next=deleteNode.next;
+            } else {
+                if (i == deleteIndex - 1) {
+                    ListNode deleteNode = node.next;
+                    node.next = deleteNode.next;
                     return head;
                 }
             }
             i++;
-            node=node.next;
+            node = node.next;
         }
         return head;
     }
 
     /**
      * @param head: The first node of linked list.
-     * @param x: an integer
+     * @param x:    an integer
      * @return: a ListNode
      */
     public ListNode partition(ListNode head, int x) {
         // write your code here
-        if(head==null)return null;
-        ListNode ret=head;
-        boolean isHeadTarget=false;
-        ListNode targetPre=null;
-        ListNode node=head;
-        if(head.val>=x) isHeadTarget=true;
-        else{
-            while(node.next!=null){
-                if(node.next.val>=x) {
-                    targetPre=node;
+        if (head == null) return null;
+        ListNode ret = head;
+        boolean isHeadTarget = false;
+        ListNode targetPre = null;
+        ListNode node = head;
+        if (head.val >= x) isHeadTarget = true;
+        else {
+            while (node.next != null) {
+                if (node.next.val >= x) {
+                    targetPre = node;
                     break;
                 }
-                node=node.next;
+                node = node.next;
             }
         }
-        if(isHeadTarget){
-            ListNode start=head;
-            ListNode record=null;
-            while(start.next!=null){
-                if(start.next.val<x){
-                    ListNode tmp=start.next;
-                    start.next=tmp.next;
-                    tmp.next=head;
-                    if(record!=null) {
-                        record.next=tmp;
-                    }else{
-                        ret=tmp;
+        if (isHeadTarget) {
+            ListNode start = head;
+            ListNode record = null;
+            while (start.next != null) {
+                if (start.next.val < x) {
+                    ListNode tmp = start.next;
+                    start.next = tmp.next;
+                    tmp.next = head;
+                    if (record != null) {
+                        record.next = tmp;
+                    } else {
+                        ret = tmp;
                     }
-                    record=tmp;
+                    record = tmp;
                     continue;
                 }
-                start=start.next;
+                start = start.next;
             }
-        }else{
-            if(targetPre==null){
+        } else {
+            if (targetPre == null) {
                 return head;
-            }else{
-                ListNode start=targetPre.next;
-                ListNode record=targetPre;
-                while(start.next!=null){
-                    if(start.next.val<x){
-                        ListNode tmp=start.next;
-                        start.next=tmp.next;
-                        tmp.next=record.next;
-                        record.next=tmp;
-                        record=tmp;
+            } else {
+                ListNode start = targetPre.next;
+                ListNode record = targetPre;
+                while (start.next != null) {
+                    if (start.next.val < x) {
+                        ListNode tmp = start.next;
+                        start.next = tmp.next;
+                        tmp.next = record.next;
+                        record.next = tmp;
+                        record = tmp;
                         continue;
                     }
-                    start=start.next;
+                    start = start.next;
                 }
             }
 
         }
-        return isHeadTarget?ret:head;
+        return isHeadTarget ? ret : head;
     }
 
     /**
@@ -1357,16 +1358,16 @@ public class Solution {
      */
     public static ListNode deleteDuplicates(ListNode head) {
         // write your code here
-        ListNode node=head;
-        while(node!=null){
-            ListNode tmp=node.next;
-            if(tmp!=null){
-                if(tmp.val==node.val){
-                    node.next=tmp.next;
+        ListNode node = head;
+        while (node != null) {
+            ListNode tmp = node.next;
+            if (tmp != null) {
+                if (tmp.val == node.val) {
+                    node.next = tmp.next;
                     continue;
                 }
-                node=node.next;
-            }else{
+                node = node.next;
+            } else {
                 break;
             }
         }
@@ -1379,25 +1380,25 @@ public class Solution {
      */
     public ListNode reverse(ListNode head) {
         // write your code here
-        if(head==null) return null;
-        Map<ListNode,ListNode> map=new HashMap<>();
-        ListNode node=head;
-        while(node!=null){
-            map.put(node,node.next);
-            node=node.next;
+        if (head == null) return null;
+        Map<ListNode, ListNode> map = new HashMap<>();
+        ListNode node = head;
+        while (node != null) {
+            map.put(node, node.next);
+            node = node.next;
         }
-        ListNode ret=null;
-        for(Map.Entry<ListNode,ListNode> entry:map.entrySet()){
-            if(entry.getValue()==null){
-                ret=entry.getKey();
+        ListNode ret = null;
+        for (Map.Entry<ListNode, ListNode> entry : map.entrySet()) {
+            if (entry.getValue() == null) {
+                ret = entry.getKey();
                 continue;
             }
-            if(entry.getKey()==head){
-                entry.getValue().next=entry.getKey();
-                entry.getKey().next=null;
+            if (entry.getKey() == head) {
+                entry.getValue().next = entry.getKey();
+                entry.getKey().next = null;
                 continue;
             }
-            entry.getValue().next=entry.getKey();
+            entry.getValue().next = entry.getKey();
         }
         return ret;
     }
@@ -1409,40 +1410,40 @@ public class Solution {
      */
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         // write your code here
-        if(l1==null) return l2;
-        if(l2==null) return l1;
-        ListNode ret=null;
-        ListNode index=null;
-        ListNode node1=l1;
-        ListNode node2=l2;
-        while(node1!=null&&node2!=null){
-            if(node1.val<=node2.val){
-                if(ret==null) ret=node1;
-                if(index==null) index=node1;
-                else{
-                    index.next=node1;
-                    index=node1;
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+        ListNode ret = null;
+        ListNode index = null;
+        ListNode node1 = l1;
+        ListNode node2 = l2;
+        while (node1 != null && node2 != null) {
+            if (node1.val <= node2.val) {
+                if (ret == null) ret = node1;
+                if (index == null) index = node1;
+                else {
+                    index.next = node1;
+                    index = node1;
                 }
-                node1=node1.next;
-            }else{
-                if(ret==null) ret=node2;
-                if(index==null) index=node2;
-                else{
-                    index.next=node2;
-                    index=node2;
+                node1 = node1.next;
+            } else {
+                if (ret == null) ret = node2;
+                if (index == null) index = node2;
+                else {
+                    index.next = node2;
+                    index = node2;
                 }
-                node2=node2.next;
+                node2 = node2.next;
             }
         }
-        while(node1!=null){
-            index.next=node1;
-            index=node1;
-            node1=node1.next;
+        while (node1 != null) {
+            index.next = node1;
+            index = node1;
+            node1 = node1.next;
         }
-        while(node2!=null){
-            index.next=node2;
-            index=node2;
-            node2=node2.next;
+        while (node2 != null) {
+            index.next = node2;
+            index = node2;
+            node2 = node2.next;
         }
         return ret;
     }
@@ -1702,6 +1703,336 @@ public class Solution {
         root.right = sortedListToBST(slow.next);
         return root;
     }
+
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer.
+     */
+    public int maxDepth(TreeNode root) {
+        // write your code here
+        if (root == null) return 0;
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
+
+    /**
+     * @param root: The root of the binary search tree.
+     * @param node: insert this node into the binary search tree
+     * @return: The root of the new binary search tree.
+     */
+    public TreeNode insertNode(TreeNode root, TreeNode node) {
+        // write your code here
+        if (root == null) return node;
+        if (node == null) return root;
+        TreeNode index = root;
+        while (index != null) {
+            if (node.val < index.val) {
+                if (index.left != null) index = index.left;
+                else {
+                    index.left = node;
+                    break;
+                }
+            } else {
+                if (index.right != null) index = index.right;
+                else {
+                    index.right = node;
+                    break;
+                }
+            }
+        }
+        return root;
+    }
+
+    /**
+     * @param root: The root of binary tree.
+     * @return: True if this Binary tree is Balanced, or false.
+     */
+    public boolean isBalanced(TreeNode root) {
+        // write your code here
+        if (root == null) return true;
+        int leftHeight = getHeight(root.left);
+        int rightHeight = getHeight(root.right);
+        if (Math.abs(leftHeight - rightHeight) <= 1) {
+            return isBalanced(root.left) && isBalanced(root.right);
+        } else {
+            return false;
+        }
+    }
+
+    public int getHeight(TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(getHeight(root.left), getHeight(root.right)) + 1;
+    }
+
+    /**
+     * @param root: The root of binary tree.
+     * @return: Preorder in ArrayList which contains node values.
+     */
+    public ArrayList<Integer> preorderTraversal(TreeNode root) {
+        // write your code here\
+
+        ArrayList<Integer> ret = new ArrayList<>();
+        if (root == null) return ret;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.add(root);
+        while (!stack.empty()) {
+            TreeNode node = stack.pop();
+            ret.add(node.val);
+            if (node.right != null) stack.add(node.right);
+            if (node.left != null) stack.add(node.left);
+        }
+        return ret;
+    }
+
+    /**
+     * @param root: The root of binary tree.
+     * @return: Level order a list of lists of integer
+     */
+    public ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
+        // write your code here
+        ArrayList<ArrayList<Integer>> ret = new ArrayList<>();
+        if (root == null) return ret;
+        ArrayList<TreeNode> index = new ArrayList<>();
+        index.add(root);
+        while (!index.isEmpty()) {
+            ArrayList<Integer> newList = new ArrayList<>();
+            int size = index.size();
+            for (int i = 0; i < size; i++) {
+                newList.add(index.get(i).val);
+                if (index.get(i).left != null) index.add(index.get(i).left);
+                if (index.get(i).right != null) index.add(index.get(i).right);
+            }
+            ret.add(newList);
+            for (int i = 0; i < size; i++) {
+                index.remove(0);
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * @param root: The root of binary tree.
+     * @return: True if the binary tree is BST, or false
+     */
+    /*
+    若有效，中序遍历一定有序
+     */
+    public boolean isValidBST(TreeNode root) {
+        // write your code here
+        List<Integer> list = new ArrayList<>();
+        LDR(root, list);
+        if (list.size() == 1) return true;
+        for (int i = 0; i < list.size() - 1; i++) {
+            if (list.get(i) < list.get(i + 1)) {
+            } else {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    public void LDR(TreeNode node, List<Integer> list) {
+        if (node == null) return;
+        LDR(node.left, list);
+        list.add(node.val);
+        LDR(node.right, list);
+    }
+
+    /**
+     * @param root: The root of the binary search tree.
+     * @param k1    and k2: range k1 to k2.
+     * @return: Return all keys that k1<=key<=k2 in ascending order.
+     */
+    public ArrayList<Integer> searchRange(TreeNode root, int k1, int k2) {
+        // write your code here
+        List<Integer> list = new ArrayList<>();
+        LDR(root, list);
+        ArrayList<Integer> ret = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            int value = list.get(i);
+            if (value >= k1 && value <= k2) {
+                ret.add(value);
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * @param preorder : A list of integers that preorder traversal of a tree
+     * @param inorder  : A list of integers that inorder traversal of a tree
+     * @return : Root of a tree
+     */
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        // write your code here
+        if (preorder == null || inorder == null) return null;
+        return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    public TreeNode buildTree(int[] preorder, int start1, int end1, int[] inorder, int start2, int end2) {
+        if (start2 > end2 || start1 > end1) {
+            return null;
+        }
+        int rootValue = preorder[start1];
+        int rootValueIndex = -1;
+        for (int i = start2; i <= end2; i++) {
+            if (inorder[i] == rootValue) {
+                rootValueIndex = i;
+                break;
+            }
+        }
+        if (rootValueIndex == -1) return null;
+        TreeNode node = new TreeNode(rootValue);
+        int leftChildSize = rootValueIndex - start2;
+        if (leftChildSize == 0) node.left = null;
+        else {
+            node.left = buildTree(preorder, start1 + 1, start1 + leftChildSize, inorder, start2, rootValueIndex - 1);
+        }
+        int rightChildSize = end2 - rootValueIndex;
+        if (rightChildSize == 0) node.right = null;
+        else {
+            node.right = buildTree(preorder, start1 + leftChildSize + 1, end1, inorder, rootValueIndex + 1, end2);
+        }
+
+        return node;
+    }
+
+    /**
+     * This method will be invoked first, you should design your own algorithm
+     * to serialize a binary tree which denote by a root node to a string which
+     * can be easily deserialized by your own "deserialize" method later.
+     */
+    public String serialize(TreeNode root) {
+        // write your code here
+        StringBuilder sb = new StringBuilder();
+        nodeToString(root, sb);
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    public void nodeToString(TreeNode root, StringBuilder sb) {
+        if (root == null) {
+            sb.append("#,");
+            return;
+        }
+        sb.append(root.val);
+        sb.append(",");
+        nodeToString(root.left, sb);
+        nodeToString(root.right, sb);
+    }
+
+    /**
+     * This method will be invoked second, the argument data is what exactly
+     * you serialized at method "serialize", that means the data is not given by
+     * system, it's given by your own serialize method. So the format of data is
+     * designed by yourself, and deserialize it here as you serialize it in
+     * "serialize" method.
+     */
+    public TreeNode deserialize(String data) {
+        // write your code here
+        String[] tokens = data.split(",");
+        //Integer index=new Integer(0);
+        AtomicInteger index = new AtomicInteger(0);
+        return stringToNode(tokens, index);
+    }
+
+    public TreeNode stringToNode(String[] tokens, AtomicInteger index) {
+        if (tokens[index.get()].equals("#")) {
+            index.incrementAndGet();
+            return null;
+        }
+        int value = Integer.valueOf(tokens[index.get()]);
+        TreeNode root = new TreeNode(value);
+        index.incrementAndGet();
+        root.left = stringToNode(tokens, index);
+        root.right = stringToNode(tokens, index);
+        return root;
+    }
+
+    /**
+     * @param root:  The root of the binary search tree.
+     * @param value: Remove the node with given value.
+     * @return: The root of the binary search tree after removal.
+     */
+    public TreeNode removeNode(TreeNode root, int value) {
+        // write your code here
+        if (root == null) return null;
+        TreeNode node = root;
+        TreeNode parent = root;
+        boolean isLeft = false;
+        while (node != null) {
+            if (value == node.val) {
+                //to do
+                if (node.left != null && node.right != null) {
+                    int val = findReplaceableNode(node);
+                    node.val = val;
+                } else if (node.left == null) {
+                    if (node == root) return node.right;
+                    else {
+                        if (isLeft) {
+                            parent.left = node.right;
+                        } else {
+                            parent.right = node.right;
+                        }
+                        return root;
+                    }
+                } else {
+                    if (node == root) return node.left;
+                    else {
+                        if (isLeft) {
+                            parent.left = node.left;
+                        } else {
+                            parent.right = node.left;
+                        }
+                        return root;
+                    }
+
+                }
+            } else if (value < node.val) {
+                isLeft = true;
+                parent = node;
+                node = node.left;
+            } else {
+                isLeft = false;
+                parent = node;
+                node = node.right;
+            }
+        }
+        return root;
+    }
+
+
+    public int findReplaceableNode(TreeNode root) {
+        boolean isLeft = true;
+        if (root.left != null) {
+            TreeNode parent = root;
+            TreeNode node = root.left;
+            isLeft = true;
+            while (node.right != null) {
+                parent = node;
+                node = node.right;
+                isLeft = false;
+            }
+            if (isLeft) parent.left = null;
+            else parent.right = null;
+
+            return node.val;
+        } else if (root.right != null) {
+            TreeNode parent = root;
+            TreeNode node = root.right;
+            isLeft = false;
+            while (node.left != null) {
+                parent = node;
+                node = node.left;
+                isLeft = true;
+            }
+            if (isLeft) parent.left = null;
+            else parent.right = null;
+            return node.val;
+        }
+        return 0;
+    }
+
+
 }
 
 
