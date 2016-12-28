@@ -2,6 +2,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SolutionTest {
     private Solution solution;
@@ -236,6 +239,93 @@ public class SolutionTest {
         String ret = solution.serialize(node1);
         System.out.println(ret);
         solution.deserialize(ret);
+
+    }
+
+    @Test
+    public void testPermute() throws Exception {
+        int[] nums = new int[]{1, 2, 3};
+        solution.permute(nums);
+
+    }
+
+    @Test
+    public void testCombine() throws Exception {
+
+        List<List<Integer>> ret = solution.combine(4, 2);
+        for (List<Integer> list : ret) {
+            System.out.println();
+            for (int i : list) {
+                System.out.print(i + " ");
+            }
+        }
+    }
+
+    @Test
+    public void testLadderLength() throws Exception {
+        String start = "hit";
+        String end = "cog";
+        Set<String> set = new HashSet<>();
+        set.add("hot");
+        set.add("dot");
+        set.add("lot");
+        set.add("dog");
+        set.add("log");
+
+        System.out.println(solution.ladderLength(start, end, set));
+
+    }
+
+    @Test
+    public void testPermuteUnique() throws Exception {
+        int[] nums = new int[]{1, 2, 2};
+        List<List<Integer>> ret = solution.permuteUnique(nums);
+        for (List<Integer> list : ret) {
+            for (Integer i : list) {
+                System.out.print(i + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    public void testPermuteUnique2() throws Exception {
+        int[] nums = new int[]{1, 2, 2};
+        List<List<Integer>> ret = solution.permuteUnique2(nums);
+        for (List<Integer> list : ret) {
+            for (Integer i : list) {
+                System.out.print(i + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    public void testCombinationSum() throws Exception {
+        int[] nums = new int[]{2, 2, 3};
+        int target = 7;
+        List<List<Integer>> ret = solution.combinationSum(nums, target);
+        for (List<Integer> list : ret) {
+            for (Integer i : list) {
+                System.out.print(i + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    public void testSolveNQueens() throws Exception {
+        int n = 4;
+
+        ArrayList<ArrayList<String>> ret = solution.solveNQueens(n);
+        System.out.println("ret==" + ret.size());
+        for (ArrayList<String> list : ret) {
+            for (String str : list) {
+                System.out.print(str);
+            }
+            System.out.println();
+            System.out.println();
+        }
 
     }
 }

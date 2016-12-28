@@ -553,6 +553,7 @@ public class Solution {
     }
 
     public void swap(int[] array, int i, int j) {
+        if (i == j) return;
         array[i] = array[i] ^ array[j];
         array[j] = array[i] ^ array[j];
         array[i] = array[i] ^ array[j];
@@ -2030,6 +2031,434 @@ public class Solution {
             return node.val;
         }
         return 0;
+    }
+
+    /**
+     * @param nums: A list of integers.
+     * @return: A list of permutations.
+     */
+    public List<List<Integer>> permute(int[] nums) {
+        // write your code here
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        if (nums == null) return ret;
+        permute(nums, 0, ret);
+        return ret;
+    }
+
+    public void permute(int[] nums, int start, List<List<Integer>> ret) {
+        if (start >= nums.length - 1) {
+            List<Integer> list = new ArrayList<>();
+            for (int i : nums) {
+                list.add(i);
+            }
+            ret.add(list);
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            int startIndex = start;
+            int curIndex = i;
+            swap(nums, startIndex, curIndex);
+            permute(nums, start + 1, ret);
+            swap(nums, startIndex, curIndex);
+        }
+
+    }
+
+    /**
+     * @param n: Given the range of numbers
+     * @param k: Given the numbers of combinations
+     * @return: All the combinations of k numbers out of 1..n
+     */
+    public List<List<Integer>> combine(int n, int k) {
+        // write your code here
+        List<List<Integer>> ret = new ArrayList<>();
+        if (n < k) {
+            return ret;
+        }
+        Set<Integer> set = new HashSet<>();
+        combine(n, n - k, set, ret, 1);
+        return ret;
+    }
+
+    public void combine(int n, int p, Set<Integer> set, List<List<Integer>> ret, int start) {
+        if (p == 0) {
+            List<Integer> list = new ArrayList<>();
+            for (int i = 1; i <= n; i++) {
+                if (!set.contains(i)) {
+                    list.add(i);
+                }
+            }
+            ret.add(list);
+            return;
+        }
+        for (int i = start; i <= n; i++) {
+            if (set.contains(i)) {
+                continue;
+            } else {
+                set.add(i);
+                combine(n, p - 1, set, ret, i + 1);
+                set.remove(i);
+            }
+        }
+
+    }
+
+    /**
+     * @param start, a string
+     * @param end,   a string
+     * @param dict,  a set of string
+     * @return an integer
+     */
+    public int ladderLength(String start, String end, Set<String> dict) {
+        // write your code here
+        //BFS
+        if (start.equals(end)) return 1;
+        Map<String, Integer> visited = new HashMap<>();
+        Queue<String> queue = new LinkedList<>();
+        queue.add(start);
+        visited.put(start, 1);
+        while (queue.size() != 0) {
+            String tmp = queue.poll();
+            int layer = visited.get(tmp);
+            if (isChange(tmp, end)) return layer + 1;
+            for (String str : dict) {
+                if (visited.get(str) == null) {
+
+                    if (isChange(tmp, str)) {
+                        queue.add(str);
+                        visited.put(str, layer + 1);
+                    }
+                }
+            }
+        }
+        return 0;
+
+    }
+
+    public boolean isChange(String src, String dst) {
+        char[] srcChar = src.toCharArray();
+        char[] dstChar = dst.toCharArray();
+        int difCount = 0;
+        for (int i = 0; i < srcChar.length; i++) {
+            if (srcChar[i] != dstChar[i]) {
+                difCount++;
+            }
+        }
+        if (difCount == 1) return true;
+        return false;
+    }
+
+    /**
+     * @param nums: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    public ArrayList<ArrayList<Integer>> subsets(int[] nums) {
+        // write your code here
+        ArrayList<ArrayList<Integer>> ret = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        Arrays.sort(nums);
+        subsetsCore(nums, 0, list, ret);
+        return ret;
+    }
+
+    public void subsetsCore(int[] nums, int start, ArrayList<Integer> list, ArrayList<ArrayList<Integer>> ret) {
+        if (start == nums.length) {
+            Collections.sort(list, new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    return o1 - o2;
+                }
+            });
+            ret.add(list);
+            return;
+        }
+        ArrayList<Integer> list2 = new ArrayList<>(list);
+        list2.add(nums[start]);
+        subsetsCore(nums, start + 1, list, ret);
+        subsetsCore(nums, start + 1, list2, ret);
+
+    }
+
+    /**
+     * @param nums: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    public ArrayList<ArrayList<Integer>> subsetsWithDup(int[] nums) {
+        // write your code here
+        ArrayList<ArrayList<Integer>> ret = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        Arrays.sort(nums);
+        subsetsCore(nums, 0, list, ret);
+        return ret;
+    }
+
+    public void subsetsWithDupCore(int[] nums, int start, ArrayList<Integer> list, ArrayList<ArrayList<Integer>> ret) {
+        if (start == nums.length) {
+            Collections.sort(list, new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    return o1 - o2;
+                }
+            });
+            ret.add(list);
+            return;
+        }
+        if (list.size() > 0) {
+            if (nums[start] == list.get(list.size() - 1)) {
+
+                list.add(nums[start]);
+                subsetsWithDupCore(nums, start + 1, list, ret);
+            } else {
+                ArrayList<Integer> list2 = new ArrayList<>(list);
+                list2.add(nums[start]);
+                subsetsWithDupCore(nums, start + 1, list, ret);
+                subsetsWithDupCore(nums, start + 1, list2, ret);
+            }
+        } else {
+            ArrayList<Integer> list2 = new ArrayList<>(list);
+            list2.add(nums[start]);
+            subsetsWithDupCore(nums, start + 1, list, ret);
+            subsetsWithDupCore(nums, start + 1, list2, ret);
+        }
+
+    }
+
+    /**
+     * @param nums: A list of integers.
+     * @return: A list of unique permutations.
+     */
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // Write your code here
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        if (nums == null) return ret;
+        permuteUnique(nums, 0, ret);
+        return ret;
+    }
+
+    public void permuteUnique(int[] nums, int start, List<List<Integer>> ret) {
+        if (start >= nums.length - 1) {
+            List<Integer> list = new ArrayList<>();
+            for (int i : nums) {
+                list.add(i);
+            }
+            ret.add(list);
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            /*
+            int startIndex=start;
+            int curIndex=i;
+            if(startIndex!=curIndex&&nums[startIndex]==nums[curIndex]){
+                continue;
+            }else{
+                swap(nums, startIndex, curIndex);
+                permuteUnique(nums, start + 1, ret);
+                swap(nums, startIndex, curIndex);
+            }
+            */
+            /*
+            * 每遍历到一个数 就从num[start]--nums[i]检查有没有与nums[i]相同的数，有则跳过这次遍历。
+             */
+
+            boolean flag = true;
+            //int tmp=nums[i];
+            int j = i;
+            while (j >= start) {
+                if (nums[j] == nums[i] && j != i) {
+                    flag = false;
+                }
+                j--;
+            }
+            if (flag) {
+                int startIndex = start;
+                int curIndex = i;
+                swap(nums, startIndex, curIndex);
+                permuteUnique(nums, start + 1, ret);
+                swap(nums, startIndex, curIndex);
+            }
+        }
+    }
+
+
+    /**
+     * @param nums: A list of integers.
+     * @return: A list of unique permutations.
+     * 不用递归
+     */
+    public List<List<Integer>> permuteUnique2(int[] nums) {
+        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        if (nums == null) return ret;
+        do {
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < nums.length; i++) {
+                list.add(nums[i]);
+            }
+            ret.add(list);
+        } while (nextPermute(nums));
+        return ret;
+    }
+
+    public boolean nextPermute(int[] nums) {
+        int n = nums.length;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = n - 1; j > i; j--) {
+                if (nums[i] < nums[j]) {
+                    swap(nums, i, j);
+                    Arrays.sort(nums, i + 1, nums.length);
+                    return true;
+                }
+            }
+        }
+        Arrays.sort(nums, 0, nums.length - 1);
+        return false;
+    }
+
+    /**
+     * @param candidates: A list of integers
+     * @param target:An   integer
+     * @return: A list of lists of integers
+     */
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        // write your code here
+        Arrays.sort(candidates);
+        int[] nums = new int[candidates.length];
+        int index = 1;
+        nums[0] = candidates[0];
+        for (int i = 1; i < candidates.length; i++) {
+            if (candidates[i] == candidates[i - 1]) {
+                continue;
+            } else {
+                nums[index] = candidates[i];
+                index++;
+            }
+        }
+        int[] arg = Arrays.copyOfRange(nums, 0, index);
+        List<List<Integer>> ret = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        combinationSumCore(arg, 0, target, list, ret);
+        return ret;
+    }
+
+    public void combinationSumCore(int[] candidates, int start, int target, List<Integer> list, List<List<Integer>> ret) {
+        if (start >= candidates.length) return;
+        if (candidates[start] == target) {
+            list.add(candidates[start]);
+            ret.add(list);
+            return;
+        }
+        if (candidates[start] > target) {
+            if (list.size() != 0) {
+                list.remove(list.size() - 1);
+                combinationSumCore(candidates, start + 1, target, list, ret);
+            }
+            return;
+        }
+        List<Integer> list2 = new ArrayList<>(list);
+        combinationSumCore(candidates, start + 1, target, list, ret);
+        list2.add(candidates[start]);
+        combinationSumCore(candidates, start, target - candidates[start], list2, ret);
+    }
+
+    /**
+     * @param graph: A list of Directed graph node
+     * @return: Any topological order for the given graph.
+     * 拓扑排序，把一个有向无环图转换成一维的拓扑排序。拓扑排序是对有向无环图的一种排序。
+     * 表示了顶点按边的方向出现的先后顺序。如果有环，则无法表示两个顶点的先后顺序。
+     * 一个简单的求拓扑排序的算法：首先要找到任意入度为0的一个顶点，删除它及所有相邻的边，再找入度为0的顶点，
+     * 以此类推，直到删除所有顶点。顶点的删除顺序即为拓扑排序。这里要用到BFS。
+     * <p/>
+     * 1）首先计算每个点的入度。
+     * <p/>
+     * 2）把入度为0的节点加进队列。
+     * <p/>
+     * 3）用队列进行BFS操作，每次从队列中拿出节点的时候，更新它的后继结点的入度（后继结点入度减1）。
+     */
+    public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+        // write your code here
+        //record 0 in-degree node
+        Map<DirectedGraphNode, Integer> map = new HashMap<>();
+        for (DirectedGraphNode node : graph) {
+            ArrayList<DirectedGraphNode> neighbors = node.neighbors;
+            for (DirectedGraphNode neighbor : neighbors) {
+                if (map.containsKey(neighbor)) {
+                    map.put(neighbor, map.get(neighbor) + 1);
+                } else {
+                    map.put(neighbor, 1);
+                }
+            }
+        }
+        ArrayList<DirectedGraphNode> ret = new ArrayList<>();
+        Queue<DirectedGraphNode> queue = new LinkedList<>();
+        for (DirectedGraphNode node : graph) {
+            if (!map.containsKey(node)) {
+                queue.add(node);
+            }
+        }
+        //BFS
+        while (!queue.isEmpty()) {
+            DirectedGraphNode node = queue.poll();
+            ret.add(node);
+            ArrayList<DirectedGraphNode> neighbors = node.neighbors;
+            for (DirectedGraphNode neighbor : neighbors) {
+                int indegree = map.get(neighbor) - 1;
+                if (indegree == 0) {
+                    queue.add(neighbor);
+                    map.remove(neighbor);
+                } else {
+                    map.put(neighbor, indegree);
+                }
+            }
+        }
+        return ret;
+
+    }
+
+    /**
+     * Get all distinct N-Queen solutions
+     *
+     * @param n: The number of queens
+     * @return: All distinct solutions
+     * For example, A string '...Q' shows a queen on forth position
+     */
+    ArrayList<ArrayList<String>> solveNQueens(int n) {
+        // write your code here
+        ArrayList<ArrayList<String>> ret = new ArrayList<>();
+        if (n < 1) return ret;
+        int[] record = new int[n];
+        solveNQueuesCore(n, 0, record, ret);
+        return ret;
+    }
+
+    public void solveNQueuesCore(int n, int curRow, int[] record, ArrayList<ArrayList<String>> ret) {
+        if (curRow == n) {
+            ArrayList<String> list = new ArrayList<>();
+            for (int i = 0; i < record.length; i++) {
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < n; j++) {
+                    if (j == record[i]) sb.append("Q");
+                    else sb.append(".");
+                }
+                list.add(sb.toString());
+            }
+            ret.add(list);
+            return;
+        }
+        for (int col = 0; col < n; col++) {
+            if (isValid(record, curRow, col)) {
+                record[curRow] = col;
+                solveNQueuesCore(n, curRow + 1, record, ret);
+                record[curRow] = 0;
+            }
+        }
+    }
+
+    public boolean isValid(int[] record, int curRow, int col) {
+        for (int k = 0; k < curRow; k++) {
+            if (col == record[k] || Math.abs(k - curRow) == Math.abs(record[k] - col)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
