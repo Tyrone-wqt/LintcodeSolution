@@ -1,10 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SolutionTest {
     private Solution solution;
@@ -327,5 +324,31 @@ public class SolutionTest {
             System.out.println();
         }
 
+    }
+
+    @Test
+    public void testFindLadders() throws Exception {
+        /*String start = "qa";
+        String end = "sq";
+        String[] strs=new String[]{"si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"};
+        Set<String> set = new HashSet<>();
+        *//*set.add("hot");
+        set.add("dot");
+        set.add("lot");
+        set.add("dog");
+        set.add("log");*//*
+        Collections.addAll(set,strs);*/
+        String start = "hot";
+        String end = "dog";
+        String[] strs = new String[]{"hot", "cog", "dog", "tot", "hog", "hop", "pot", "dot"};
+        Set<String> set = new HashSet<>();
+        Collections.addAll(set, strs);
+        List<List<String>> ret = solution.findLadders(start, end, set);
+        for (List<String> list : ret) {
+            for (String str : list) {
+                System.out.print(str + " ");
+            }
+            System.out.println();
+        }
     }
 }
