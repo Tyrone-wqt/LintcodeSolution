@@ -351,4 +351,42 @@ public class SolutionTest {
             System.out.println();
         }
     }
+
+    @Test
+    public void testMaxSubArray() throws Exception {
+        int[] nums = new int[]{-4, 5, -4, 5, -4, 5, -4, 5, -4, 5, -4, 5, -4, 5, -4, 5, -4, 5, -1000};
+        solution.maxSubArray(nums);
+    }
+
+    @Test
+    public void testIsInterleave() throws Exception {
+        String s1 = "aabcc";
+        String s2 = "dbbca";
+        String s3 = "aadbbcbcac";
+        System.out.println(solution.isInterleave(s1, s2, s3));
+    }
+
+    @Test
+    public void testMinDistance() throws Exception {
+        String s1 = "sea";
+        String s2 = "ate";
+        System.out.println(solution.minDistance(s1, s2));
+    }
+
+    @Test
+    public void testLongestConsecutive() throws Exception {
+        int[] num = new int[]{0, 0, -1};
+        solution.longestConsecutive(num);
+    }
+
+    @Test
+    public void testMedianII() throws Exception {
+        int[] num1 = new int[]{1, 2, 3, 4, 5};
+        int[] num2 = new int[]{4, 5, 1, 3, 2, 6, 0};
+        int[] num3 = new int[]{2, 20, 100};
+        int[] ret = solution.medianII(num3);
+        for (int i = 0; i < ret.length; i++) {
+            System.out.print(ret[i]);
+        }
+    }
 }

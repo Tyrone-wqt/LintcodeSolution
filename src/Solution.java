@@ -2543,6 +2543,532 @@ public class Solution {
         return expansion;
     }
 
+    /**
+     * @param nums: A list of integers
+     * @return: A integer indicate the sum of max subarray
+     */
+    public int maxSubArray(int[] nums) {
+        // write your code
+        if (nums == null || nums.length == 0) return 0;
+        int sum = 0;
+        int maxSum = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (sum > maxSum)
+                maxSum = sum;
+            if (sum < 0)
+                sum = 0;
+        }
+        return maxSum;
+    }
+
+    /**
+     * @param triangle: a list of lists of integers.
+     * @return: An integer, minimum path sum.
+     */
+    public int minimumTotal(int[][] triangle) {
+        // write your code here
+        int row = triangle.length;
+        int[][] s = new int[row][];
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < row; i++) {
+            int col = i + 1;
+            s[i] = new int[col];
+            if (i == 0) {
+                s[i][0] = triangle[i][0];
+                if (i == row - 1) {
+                    if (s[i][0] < min) min = s[i][0];
+                }
+            } else {
+                for (int j = 0; j < i + 1; j++) {
+                    if (j == 0) {
+                        s[i][j] = s[i - 1][j] + triangle[i][j];
+                    } else if (j == i) {
+                        s[i][j] = s[i - 1][j - 1] + triangle[i][j];
+                    } else {
+                        s[i][j] = Math.min(s[i - 1][j - 1], s[i - 1][j]) + triangle[i][j];
+                    }
+                    if (i == row - 1) {
+                        if (s[i][j] < min) min = s[i][j];
+                    }
+                }
+            }
+
+        }
+        return min;
+    }
+
+    /**
+     * @param n: An integer
+     * @return: An integer
+     */
+    public int climbStairs(int n) {
+        // write your code here
+        if (n < 0) return -1;
+        if (n == 0 || n == 1) return 1;
+        int[] cache = new int[n + 1];
+        cache[0] = 1;
+        cache[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            cache[i] = cache[i - 1] + cache[i - 2];
+        }
+        return cache[n];
+    }
+
+    /**
+     * @param obstacleGrid: A list of lists of integers
+     * @return: An integer
+     */
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        // write your code here
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        if (m <= 0 || n <= 0) return 0;
+        int s[][] = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            if (obstacleGrid[i][0] == 0) {
+                s[i][0] = 1;
+            } else {
+                while (i < m) {
+                    s[i][0] = 0;
+                    i++;
+                }
+                break;
+            }
+        }
+        for (int j = 0; j < n; j++) {
+            if (obstacleGrid[0][j] == 0) {
+                s[0][j] = 1;
+            } else {
+                while (j < n) {
+                    s[0][j] = 0;
+                    j++;
+                }
+                break;
+            }
+        }
+        for (int p = 1; p < m; p++) {
+            for (int q = 1; q < n; q++) {
+                if (obstacleGrid[p][q] == 1) {
+                    s[p][q] = 0;
+                    continue;
+                }
+                if (obstacleGrid[p - 1][q] == 1) {
+                    s[p][q] = s[p][q - 1];
+                } else if (obstacleGrid[p][q - 1] == 1) {
+                    s[p][q] = s[p - 1][q];
+                } else {
+                    s[p][q] = s[p - 1][q] + s[p][q - 1];
+                }
+            }
+        }
+        return s[m - 1][n - 1];
+    }
+
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param A: Given n items with size A[i]
+     * @return: The maximum size
+     */
+    public int backPack(int m, int[] A) {
+        // write your code here
+        int col = m;
+        int row = A.length;
+        int[][] s = new int[row][col + 1];
+        for (int j = 0; j <= col; j++) {
+            if (j >= A[0]) {
+                s[0][j] = A[0];
+            }
+        }
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j <= col; j++) {
+                if (j < A[i]) s[i][j] = s[i - 1][j];
+                else {
+                    s[i][j] = Math.max(s[i - 1][j], s[i - 1][j - A[i]] + A[i]);
+                }
+            }
+        }
+        return s[row - 1][col];
+    }
+
+    /**
+     * @param nums: an array of integers
+     * @return: an integer
+     */
+    /*
+    * dp1[i]:以第i个数结尾的连续子序列最大乘积
+
+dp2[i]:以第i个数结尾的连续子序列最小乘积
+转移方程:
+
+dp1[i]=max(data[i],dp1[i-1]*data[i],dp2[i-1]*data[i]);
+
+dp2[i]=min(data[i],dp1[i-1]*data[i],dp2[i-1]*data[i]);
+
+最后遍历dp1得到最大值即为答案。
+     */
+    public int maxProduct(int[] nums) {
+        // write your code here
+        int ret = nums[0];
+        int max = nums[0];
+        int min = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            int localMax = Math.max(nums[i], Math.max(max * nums[i], min * nums[i]));
+            int localMin = Math.min(nums[i], Math.min(min * nums[i], max * nums[i]));
+            max = localMax;
+            min = localMin;
+            ret = max > ret ? max : ret;
+        }
+        return ret;
+    }
+
+    /**
+     * Determine whether s3 is formed by interleaving of s1 and s2.
+     *
+     * @param s1, s2, s3: As description.
+     * @return: true or false.
+     */
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if (s3 == null || s2 == null || s1 == null) return false;
+        if (s1.equals("")) {
+            return s2.equals(s3);
+        }
+        if (s2.equals("")) {
+            return s1.equals(s3);
+        }
+        int length1 = s1.length();
+        int length2 = s2.length();
+        int length3 = s3.length();
+        if (length1 + length2 > length3) {
+            return false;
+        }
+        boolean[][] dp = new boolean[length1 + 1][length2 + 1];
+        for (int i = 0; i < length1; i++) {
+            if (s1.charAt(i) == s3.charAt(i)) {
+                dp[i + 1][0] = true;
+            }
+        }
+
+        for (int j = 0; j < length2; j++) {
+            if (s2.charAt(j) == s3.charAt(j)) {
+                dp[0][j + 1] = true;
+            }
+        }
+
+        for (int i = 1; i <= length1; i++) {
+            for (int j = 1; j <= length2; j++) {
+                if (s1.charAt(i - 1) == s3.charAt(i + j - 1) && dp[i - 1][j]) {
+                    dp[i][j] = true;
+                }
+                if (s2.charAt(j - 1) == s3.charAt(i + j - 1) && dp[i][j - 1]) {
+                    dp[i][j] = true;
+                }
+            }
+        }
+
+        return dp[length1][length2];
+
+    }
+
+    /**
+     * @param word1 & word2: Two string.
+     * @return: The minimum number of steps.
+     */
+    /*
+    *首先定义这样一个函数——edit(i, j)，它表示第一个字符串的长度为i的子串到第二个字符串的长度为j的子串的编辑距离。
+
+显然可以有如下动态规划公式：
+
+if i == 0 且 j == 0，edit(i, j) = 0
+if i == 0 且 j > 0，edit(i, j) = j
+if i > 0 且j == 0，edit(i, j) = i
+if i ≥ 1  且 j ≥ 1 ，edit(i, j) == min{ edit(i-1, j) + 1, edit(i, j-1) + 1, edit(i-1, j-1) + f(i, j) }，当第一个字符串的第i个字符不等于第二个字符串的第j个字符时，f(i, j) = 1；否则，f(i, j) = 0。
+
+    *
+     */
+    public int minDistance(String word1, String word2) {
+        // write your code here
+        if (word1 == null || word1.equals("")) return word2.length();
+        if (word2 == null || word2.equals("")) return word1.length();
+        int length1 = word1.length();
+        int length2 = word2.length();
+        int[][] dp = new int[length1 + 1][length2 + 1];
+        dp[0][0] = 0;
+        for (int j = 1; j <= length2; j++) {
+            dp[0][j] = j;
+        }
+        for (int i = 1; i <= length1; i++) {
+            dp[i][0] = i;
+        }
+
+        for (int i = 1; i <= length1; i++) {
+            for (int j = 1; j <= length2; j++) {
+                int f = word1.charAt(i - 1) == word2.charAt(j - 1) ? 0 : 1;
+                dp[i][j] = Math.min(dp[i - 1][j] + 1, Math.min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + f));
+            }
+        }
+        return dp[length1][length2];
+    }
+
+    /**
+     * @param S, T: Two string.
+     * @return: Count the number of distinct subsequences
+     */
+    /*
+    *一般来说，如果题目里面给出两个字符串，基本是两种思路，一种就是递归判断，一种就是动态规划，
+    * 这里我们可以用f(i,j)表示S中前i个字符串中，T的前j个字符出现的次数，不管S[i]和T[j]相不相等，首先f(i,j)=f(i-1,j)，
+    * 其次要是S[i]==T[j]的话，f(i,j) = f(i-1,j)+f(i-1,j-1),可以看到，i的状态只与i-1有关，于是可以用滚动数组来进行优化。
+    * 代码类似01背包。
+     */
+    public int numDistinct(String S, String T) {
+        // write your code here
+        if (S == null || S.equals("")) return 0;
+        if (T == null || T.equals("")) return 1;
+        int length1 = S.length();
+        int length2 = T.length();
+        int[][] dp = new int[length1 + 1][length2 + 1];
+        //dp[0][0]=0;
+        for (int i = 0; i < length1; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 1; i <= length1; i++) {
+            for (int j = 1; j <= length2; j++) {
+                if (S.charAt(i - 1) == T.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[length1][length2];
+
+    }
+
+    /**
+     * @param s:    A string s
+     * @param dict: A dictionary of words dict
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        // write your code here
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+        int wordMaxLEngth = maxLength(dict);
+        boolean canSegment[] = new boolean[s.length() + 1];
+        canSegment[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            canSegment[i] = false;
+            for (int j = 1; j <= i && j <= wordMaxLEngth; j++) {
+                if (canSegment[i - j] != true) {
+                    continue;
+                }
+                if (dict.contains(s.substring(i - j, i))) {
+                    canSegment[i] = true;
+                    break;
+                }
+            }
+        }
+        return canSegment[s.length()];
+    }
+
+    public int maxLength(Set<String> dict) {
+        int maxLength = 0;
+        for (String item : dict) {
+            maxLength = Math.max(item.length(), maxLength);
+        }
+        return maxLength;
+    }
+
+    /**
+     * @param num: A list of integers
+     * @return an integer
+     */
+    /*
+    * 遍历数组生成哈希表
+
+  遍历数组
+
+    序列长度1 = 找连续序列函数(当前值，增加方向)
+
+    序列长度2 = 找连续序列函数(当前值 - 1，减少方向)
+
+    如果序列长度1 + 序列长度2 > 当前最长序列，更新最长序列
+
+  遍历结束
+     */
+    public int longestConsecutive(int[] num) {
+        // write you code here
+        if (num == null || num.length == 0) return 0;
+        Set<Integer> set = new HashSet<>();
+        Set<Integer> visited = new HashSet<>();
+        for (int i = 0; i < num.length; i++) {
+            set.add(num[i]);
+        }
+        int maxLength = 0;
+        for (int i = 0; i < num.length; i++) {
+            if (visited.contains(num[i])) {
+                continue;
+            }
+            int ascLength = 0;
+            int descLength = 0;
+            int targetDesc = num[i] - 1;
+            while (true) {
+                if (set.contains(targetDesc)) {
+                    descLength++;
+                    visited.add(targetDesc);
+                    targetDesc--;
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            int targetAsc = num[i] + 1;
+            while (true) {
+
+                if (set.contains(targetAsc)) {
+                    ascLength++;
+                    visited.add(targetAsc);
+                    targetAsc++;
+
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            int length = 1 + descLength + ascLength;
+            if (length > maxLength) maxLength = length;
+            visited.contains(num[i]);
+        }
+        return maxLength;
+    }
+
+    /**
+     * @param n an integer
+     * @return the nth prime number as description.
+     */
+    public int nthUglyNumber(int n) {
+        // Write your code here
+        int index = 1;
+
+        int[] uglyNumbers = new int[n];
+        uglyNumbers[0] = 1;
+        int pMultiply2 = 0;
+        int pMultiply3 = 0;
+        int pMultiply5 = 0;
+        while (index < n) {
+
+            int uglyNum2 = uglyNumbers[pMultiply2] * 2;
+            int uglyNum3 = uglyNumbers[pMultiply3] * 3;
+            int uglyNum5 = uglyNumbers[pMultiply5] * 5;
+            int num = Math.min(uglyNum2, Math.min(uglyNum3, uglyNum5));
+            uglyNumbers[index++] = num;
+            while (uglyNumbers[pMultiply2] * 2 <= num) pMultiply2++;
+            while (uglyNumbers[pMultiply3] * 3 <= num) pMultiply3++;
+            while (uglyNumbers[pMultiply5] * 5 <= num) pMultiply5++;
+        }
+        return uglyNumbers[n - 1];
+
+    }
+
+    /**
+     * @param nums: A list of integers.
+     * @return: the median of numbers
+     */
+    public int[] medianII(int[] nums) {
+        // write your code here
+        /*if(nums==null) return null;
+        int length=nums.length;
+        int[] ret=new int[length];
+        ret[0]=nums[0];
+        for(int i=1;i<length;i++){
+            binarySort(nums,0,i-1,nums[i]);
+            int mid=i/2;
+            ret[i]=nums[mid];
+        }
+        return ret;*/
+        // write your code here
+        if (nums == null) return null;
+        int length = nums.length;
+        int[] ret = new int[length];
+        ret[0] = nums[0];
+        for (int i = 1; i < length; i++) {
+            Arrays.sort(nums, 0, i + 1);
+            int mid = i / 2;
+            ret[i] = nums[mid];
+        }
+        return ret;
+    }
+
+    /*从小到大排序*/
+    public void binarySort(int[] array, int start, int last, int num) {
+        int end = last;
+        int ret = -1;
+        if (array[start] > num) {
+            ret = start;
+        } else if (array[end] < num) {
+            ret = end + 1;
+        } else {
+            while (start <= end) {
+                int mid = (start + end) / 2;
+                if (array[mid] <= num && array[mid + 1] > num) {
+                    ret = mid + 1;
+                    break;
+                }
+                if (array[mid] < num) {
+                    start = mid + 1;
+                }
+                if (array[mid] > num) {
+                    end = mid - 1;
+                }
+            }
+        }
+        for (int i = last + 1; i > ret; i--) {
+            array[i] = array[i - 1];
+        }
+        array[ret] = num;
+
+    }
+
+    /**
+     * @param lists: a list of ListNode
+     * @return: The head of one sorted list.
+     */
+    public ListNode mergeKLists(List<ListNode> lists) {
+        // write your code here
+        if (lists == null || lists.isEmpty()) return null;
+
+        ListNode ret = null;
+        ListNode node = null;
+        int max = lists.size();
+        Queue<ListNode> priorityQueue = new PriorityQueue<>(max, new Comparator<ListNode>() {
+            @Override
+            public int compare(ListNode o1, ListNode o2) {
+                if (o1.val < o2.val) return -1;
+                else if (o1.val > o2.val) return 1;
+                else return 0;
+            }
+        });
+
+        for (ListNode tmp : lists) {
+            if (tmp != null)
+                priorityQueue.add(tmp);
+        }
+
+        while (!priorityQueue.isEmpty()) {
+            if (ret == null) {
+                ret = priorityQueue.poll();
+                node = ret;
+            } else {
+                ListNode tmp = priorityQueue.poll();
+                node.next = tmp;
+                node = tmp;
+            }
+            if (node.next != null) {
+                priorityQueue.add(node.next);
+            }
+        }
+        return ret;
+    }
 
 }
 
